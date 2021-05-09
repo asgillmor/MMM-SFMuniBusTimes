@@ -129,7 +129,7 @@ module.exports = NodeHelper.create({
   },
 
   // Build the URL based on the default / user configuration
-  buildUrl: function(config, url) {
+  buildUrl: function(url, config) {
     const params = [];
     for (let stop in config.stops) {
       for (let route of config.stops[stop]) {
