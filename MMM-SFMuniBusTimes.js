@@ -12,17 +12,17 @@ Module.register("MMM-SFMuniBusTimes", {
   start: function() {
     Log.info("Starting module: " + this.name);
 
-//     var self = this;
-// 
-//     this.getDepartureInfo()
-//     
-//     // Schedule update timer.
-//     setInterval(function() {
-//     	self.getDepartureInfo()
-//     }, this.config.updateInterval);
+    var self = this;
+
+    this.getDepartureInfo();
+    
+    // Schedule update timer.
+    setInterval(function() {
+    	self.getDepartureInfo()
+    }, this.config.updateInterval);
         
-    this.sendSocketNotification("START", this.config);
-    Log.log(this.name + " has started!");
+//    this.sendSocketNotification("START", this.config);
+//    Log.log(this.name + " has started!");
   },
 
   // Load required CSS files
@@ -30,6 +30,15 @@ Module.register("MMM-SFMuniBusTimes", {
     return ["MMM-SFMuniBusTimes.css"];
   },
 
+
+  getDepartureInfo: function() {
+	Log.info("Requesting SF Muni departure times");
+
+	this.sendSocketNotification("GET_MUNI_TIMINGS", {
+		config: this.config
+	});
+  },
+    
   // Update DOM with appropriate view to display all Train / Bus data
   getDom: function() {
     const wrapper = document.createElement("div");
