@@ -141,7 +141,7 @@ module.exports = NodeHelper.create({
         const config = payload;
         let url_final = new URL(this.url_base);
         url_final = this.buildUrl(url_final, config);
-        console.log("MMM-SFMuniBusTimes - url_final: " + url_final); // Print out error
+//        console.log("MMM-SFMuniBusTimes - url_final: " + url_final); // Print out error
 
         request({
             url: url_final,
