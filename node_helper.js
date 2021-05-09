@@ -11,11 +11,15 @@ module.exports = NodeHelper.create({
     console.log(this.name + " has started!");
   },
 
-  url: new URL("http://webservices.nextbus.com/service/publicXMLFeed"),
+  url_base: new URL("http://webservices.nextbus.com/service/publicXMLFeed"),
 
   // Fetch train times and generate a clean object only containing the require data
   loadTimes: async function() {
-    const data = await fetch(this.url).then(res => res.text());
+  
+  	let url_final = this.url_base;
+  	url_final = this.buildUrl(url_final, this.config);
+    const data = await fetch(url_final).then(res => res.text());
+    console.log("MMM-SFMuniBusTimes - url_final: " + url_final); // Print out error
 
     const obj = await parseXML(data);
     if (obj == undefined) {
@@ -125,7 +129,7 @@ module.exports = NodeHelper.create({
   },
 
   // Build the URL based on the default / user configuration
-  buildUrl: function(config) {
+  buildUrl: function(url, config) {
     const params = [];
     for (let stop in config.stops) {
       for (let route of config.stops[stop]) {
@@ -134,11 +138,13 @@ module.exports = NodeHelper.create({
     }
 
     // Set url params based on config
-    this.url.searchParams.append("command", "predictionsForMultiStops");
-    this.url.searchParams.append("a", "sf-muni");
+    url.searchParams.append("command", "predictionsForMultiStops");
+    url.searchParams.append("a", "sf-muni");
     for (let param of params) {
-      this.url.searchParams.append("stops", param);
+      url.searchParams.append("stops", param);
     }
+    
+    return url;
   },
 
   // Handle messages from MMM-SFMuniBusTimes.js
@@ -146,13 +152,15 @@ module.exports = NodeHelper.create({
     // If start message is received, build the URL based on the config file, and get schedule
     if (notification === "START") {
       const config = payload;
-      this.buildUrl(config);
+//      this.buildUrl(config);
       this.task = setInterval(this.loadTimes.bind(this), config.updateInterval);
     }
+    
     // If stop timer message is received, stop timer that updates schedule
     if (notification === "STOP_TIMER") {
       clearInterval(this.task);
     }
+    
     // If restart timer message is received, stop current timer (if exists) and start a new one that updates schedule
     if (notification === "RESTART_TIMER") {
       clearInterval(this.task);
