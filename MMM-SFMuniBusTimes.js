@@ -73,24 +73,33 @@ Module.register("MMM-SFMuniBusTimes", {
 
         let first = true;
         // Loop through each train for the current route
-        for (const train of routeObj.trains) {
-          const trainCell = document.createElement("td");
-          // Calculate the minutes remaining for the train / bus to arrive
-          const mins = Math.floor(train.seconds / 60);
+        
+        if (routeObj.trains.length > 0) {
+          for (const train of routeObj.trains) {
+            const trainCell = document.createElement("td");
+            // Calculate the minutes remaining for the train / bus to arrive
+            const mins = Math.floor(train.seconds / 60);
 
-          // If first train, display the seconds as well
-          if (first) {
-            const secs = "" + (train.seconds % 60);
-            const secText = secs.length === 1 ? "0" + secs : secs;
-            trainCell.innerHTML = `${mins}:${secText} mins`;
-            first = false;
+            // If first train, display the seconds as well
+            if (first) {
+              const secs = "" + (train.seconds % 60);
+              const secText = secs.length === 1 ? "0" + secs : secs;
+              trainCell.innerHTML = `${mins}m ${secText}s`;
+              first = false;
+            }
+            // If not, display only minutes
+            else {
+              trainCell.innerHTML = `${mins}m`;
+            }
+            trainCell.className = "train";
+            row.appendChild(trainCell);
           }
-          // If not, display only minutes
-          else {
-            trainCell.innerHTML = `${mins} mins`;
-          }
-          trainCell.className = "train";
-          row.appendChild(trainCell);
+        }
+        else {
+            const trainCell = document.createElement("td");
+            trainCell.innerHTML = "No predictions";
+            trainCell.className = "train";
+            row.appendChild(trainCell);
         }
       }
     }
