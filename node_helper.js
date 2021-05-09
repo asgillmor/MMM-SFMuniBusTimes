@@ -63,21 +63,25 @@ module.exports = NodeHelper.create({
       stopData.routes.push({ route, trains: [] });
       const { trains } = stopData.routes[stopData.routes.length - 1];
 
-      let count = 0;
-      // Digest data from each train's prediction for a stop
-      for (const trainPred of pred.direction[0].prediction) {
-        count += 1;
-        const train = {
-          seconds: trainPred.$.seconds,
-          cars: trainPred.$.vehiclesInConsist,
-          delayed: trainPred.$.delayed === true, // Defaults to false if delayed property doesn't exist
-        };
-        trains.push(train);
-        // Only process the next 3 trains for the current route
-        if (count >= 3) {
-          break;
+      if(pred.direction !== undefined) {
+        let count = 0;
+        // Digest data from each train's prediction for a stop
+        for (const trainPred of pred.direction[0].prediction) {
+          count += 1;
+          const train = {
+            epochTime: trainPred.$.epochTime,
+            seconds: trainPred.$.seconds,
+            cars: trainPred.$.vehiclesInConsist,
+            delayed: trainPred.$.delayed === true, // Defaults to false if delayed property doesn't exist
+          };
+          trains.push(train);
+          // Only process the next 3 trains for the current route
+          if (count >= 3) {
+            break;
+          }
         }
       }
+      
       // Sort routes so they're always ascending alphabetically/numerically
       stopData.routes.sort((a, b) => {
         let aSum = 0,
