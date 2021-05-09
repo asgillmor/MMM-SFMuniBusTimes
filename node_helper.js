@@ -18,10 +18,21 @@ module.exports = NodeHelper.create({
     const data = await fetch(this.url).then(res => res.text());
 
     const obj = await parseXML(data);
+    if (obj == undefined) {
+      console.log("MMM-SFMuniBusTimes: parseXML returned null!"); // Print out error
+      return;
+    }
+
+    if (obj.body === undefined) {
+      console.log("MMM-SFMuniBusTimes: obj.body is null!"); // Print out error
+      return;
+    }
+ 
     if (obj.body.Error !== undefined) {
       console.log(obj.body.Error[0]._); // Print out error
       return;
     }
+    
     const { predictions } = obj.body;
     const schedule = [];
     const seenStops = {};
