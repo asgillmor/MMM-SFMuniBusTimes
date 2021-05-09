@@ -5,7 +5,7 @@ Module.register("MMM-SFMuniBusTimes", {
       6994: ["J", "KT", "L", "M", "N"],
       3328: ["33"],
     },
-    updateInterval: 1000,
+    updateInterval: 60000,
   },
 
   // Send start notification to node_helper
