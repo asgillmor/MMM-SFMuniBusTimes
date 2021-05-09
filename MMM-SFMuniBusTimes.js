@@ -10,6 +10,17 @@ Module.register("MMM-SFMuniBusTimes", {
 
   // Send start notification to node_helper
   start: function() {
+    Log.info("Starting module: " + this.name);
+
+//     var self = this;
+// 
+//     this.getDepartureInfo()
+//     
+//     // Schedule update timer.
+//     setInterval(function() {
+//     	self.getDepartureInfo()
+//     }, this.config.updateInterval);
+        
     this.sendSocketNotification("START", this.config);
     Log.log(this.name + " has started!");
   },
