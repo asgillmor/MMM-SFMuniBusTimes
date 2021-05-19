@@ -45,17 +45,27 @@ module.exports = NodeHelper.create({
 
         // Digest data from each stop's predictions
         for (const pred of predictions) {
-            const route = pred.$.routeTag;
-            const stop = pred.$.stopTitle;
+            const routeTag = pred.$.routeTag;
+            const stopTitle = pred.$.stopTitle;
+            const stopTag = pred.$.stopTag;
+            
             let stopData;
+
+            let directionTitle = undefined;
+            
+            if (pred.$.dirTitleBecauseNoPredictions !== undefined) {
+            	directionTitle = pred.$.dirTitleBecauseNoPredictions;
+            }
+            
             // If a stop has been seen before, update the previously created object
-            if (seenStops[stop] !== undefined) {
-                stopData = seenStops[stop];
+            if (seenStops[stopTag] !== undefined) {
+                stopData = seenStops[stopTag];
             }
             // If not, create a new object
             else {
                 stopData = {
-                    stop,
+                    stopTitle,
+                    directionTitle,
                     routes: [],
                     messages: [],
                 };
@@ -67,7 +77,7 @@ module.exports = NodeHelper.create({
                 }
             }
             stopData.routes.push({
-                route,
+                routeTag,
                 trains: []
             });
             const {
@@ -99,20 +109,21 @@ module.exports = NodeHelper.create({
                     bSum = 0;
 
                 // Get the sum of ASCII codes for the first 3 chars of each route names for better accuracy in comparison
-                for (let i = 0; i < Math.min(a.route.length, 3); i += 1) {
-                    aSum += a.route.charCodeAt(i);
+                for (let i = 0; i < Math.min(a.routeTag.length, 3); i += 1) {
+                    aSum += a.routeTag.charCodeAt(i);
                 }
-                for (let i = 0; i < Math.min(b.route.length, 3); i += 1) {
-                    bSum += b.route.charCodeAt(i);
+                for (let i = 0; i < Math.min(b.routeTag.length, 3); i += 1) {
+                    bSum += b.routeTag.charCodeAt(i);
                 }
 
                 return aSum - bSum;
             });
 
-            if (seenStops[stop] === undefined) {
+            if (seenStops[stopTag] === undefined) {
                 schedule.push(stopData);
             }
-            seenStops[stop] = stopData;
+            
+            seenStops[stopTag] = stopData;
         }
 
         // Sort stops in schedule so they're always ascending alphabetically
@@ -121,11 +132,11 @@ module.exports = NodeHelper.create({
                 bSum = 0;
 
             // Get the sum of ASCII codes for the first 4 chars of stop names for better accuracy in comparison
-            for (let i = 0; i < Math.min(a.stop.length, 4); i += 1) {
-                aSum += a.stop.charCodeAt(i);
+            for (let i = 0; i < Math.min(a.stopTitle.length, 4); i += 1) {
+                aSum += a.stopTitle.charCodeAt(i);
             }
-            for (let i = 0; i < Math.min(b.stop.length, 4); i += 1) {
-                bSum += b.stop.charCodeAt(i);
+            for (let i = 0; i < Math.min(b.stopTitle.length, 4); i += 1) {
+                bSum += b.stopTitle.charCodeAt(i);
             }
 
             return aSum - bSum;
@@ -141,7 +152,7 @@ module.exports = NodeHelper.create({
         const config = payload;
         let url_final = new URL(this.url_base);
         url_final = this.buildUrl(url_final, config);
-//        console.log("MMM-SFMuniBusTimes - url_final: " + url_final); // Print out error
+        console.log("MMM-SFMuniBusTimes - url_final: " + url_final); // Print out error
 
         request({
             url: url_final,

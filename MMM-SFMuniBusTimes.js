@@ -57,7 +57,13 @@ Module.register("MMM-SFMuniBusTimes", {
 
             // Create a header element that displays the stop name
             const stopName = document.createElement("header");
-            stopName.innerHTML = stop.stop;
+
+        	let headerHTML = stop.stopTitle;
+        	if (stop.directionTitle !== undefined) {
+        		headerHTML = headerHTML + ": " + stop.directionTitle;
+        	}
+
+            stopName.innerHTML = headerHTML;
             stopName.className = "stop";
             stopWrapper.appendChild(stopName);
 
@@ -69,7 +75,7 @@ Module.register("MMM-SFMuniBusTimes", {
             // Loop through each route for the current stop
             for (const routeObj of stop.routes) {
                 const {
-                    route
+                    routeTag
                 } = routeObj;
 
                 // Create a row that will hold the route and next 3 bus / train times
@@ -78,7 +84,7 @@ Module.register("MMM-SFMuniBusTimes", {
 
                 // Create a route cell that will hold the route number / letter
                 const routeCell = document.createElement("td");
-                routeCell.innerHTML = route;
+                routeCell.innerHTML = routeTag;
                 routeCell.className = "route";
                 row.appendChild(routeCell);
 
