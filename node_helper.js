@@ -86,8 +86,8 @@ module.exports = NodeHelper.create({
             if (predictions.direction !== undefined) {
             	// if there are predictions, then the direction title is here
             	let directionFirst = predictions.direction[0];
-            	directionTitle = directionFirst.title;
-            	
+            	directionTitle = directionFirst.$.title;
+
                 let count = 0;
                 // Digest data from each train's prediction for a stop
                 for (const trainPred of directionFirst.prediction) {
@@ -122,11 +122,12 @@ module.exports = NodeHelper.create({
                 return aSum - bSum;
             });
 
+            stopData.directionTitle = directionTitle;
+            
             if (seenStops[stopTag] === undefined) {
                 schedule.push(stopData);
             }
             
-            stopData.directionTitle = directionTitle;
             seenStops[stopTag] = stopData;
         }
 
