@@ -53,6 +53,7 @@ module.exports = NodeHelper.create({
 
             let directionTitle = undefined;
             
+            // if there are no predictions, the direction title is here
             if (pred.$.dirTitleBecauseNoPredictions !== undefined) {
             	directionTitle = pred.$.dirTitleBecauseNoPredictions;
             }
@@ -85,9 +86,13 @@ module.exports = NodeHelper.create({
             } = stopData.routes[stopData.routes.length - 1];
 
             if (pred.direction !== undefined) {
+            	// if there are predictions, then the direction title is here
+            	let directionFirst = pred.direction[0];
+            	directionTitle = directionFirst.title;
+            	
                 let count = 0;
                 // Digest data from each train's prediction for a stop
-                for (const trainPred of pred.direction[0].prediction) {
+                for (const trainPred of directionFirst.prediction) {
                     count += 1;
                     const train = {
                         epochTime: trainPred.$.epochTime,
