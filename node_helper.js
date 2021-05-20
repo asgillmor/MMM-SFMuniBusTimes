@@ -38,24 +38,24 @@ module.exports = NodeHelper.create({
         }
 
         const {
-            predictions
+            predictionsArray
         } = obj.body;
         const schedule = [];
         const seenStops = {};
 
         // Digest data from each stop's predictions
-        for (const pred of predictions) {
-            const routeTag = pred.$.routeTag;
-            const stopTitle = pred.$.stopTitle;
-            const stopTag = pred.$.stopTag;
+        for (const predictions of predictionsArray) {
+            const routeTag = predictions.$.routeTag;
+            const stopTitle = predictions.$.stopTitle;
+            const stopTag = predictions.$.stopTag;
             
             let stopData;
 
             let directionTitle = undefined;
             
             // if there are no predictions, the direction title is here
-            if (pred.$.dirTitleBecauseNoPredictions !== undefined) {
-            	directionTitle = pred.$.dirTitleBecauseNoPredictions;
+            if (predictions.$.dirTitleBecauseNoPredictions !== undefined) {
+            	directionTitle = predictions.$.dirTitleBecauseNoPredictions;
             }
             
             // If a stop has been seen before, update the previously created object
@@ -72,7 +72,7 @@ module.exports = NodeHelper.create({
                 };
                 // TODO: Prevent message repetition in resulting object
                 // Sanitize message objects and add them to stop data
-                for (const msg of pred.message) {
+                for (const msg of predictions.message) {
                     const message = msg.$;
                     stopData.messages.push(message);
                 }
@@ -85,9 +85,9 @@ module.exports = NodeHelper.create({
                 trains
             } = stopData.routes[stopData.routes.length - 1];
 
-            if (pred.direction !== undefined) {
+            if (predictions.direction !== undefined) {
             	// if there are predictions, then the direction title is here
-            	let directionFirst = pred.direction[0];
+            	let directionFirst = predictions.direction[0];
             	directionTitle = directionFirst.title;
             	
                 let count = 0;
