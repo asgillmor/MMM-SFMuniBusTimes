@@ -37,9 +37,7 @@ module.exports = NodeHelper.create({
             return;
         }
 
-        const {
-            predictionsArray
-        } = obj.body;
+        const predictionsArray = obj.body.predictions;
         const schedule = [];
         const seenStops = {};
 
