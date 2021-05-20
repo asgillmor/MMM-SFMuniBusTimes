@@ -128,6 +128,7 @@ module.exports = NodeHelper.create({
                 schedule.push(stopData);
             }
             
+            stopData.directionTitle = directionTitle;
             seenStops[stopTag] = stopData;
         }
 
