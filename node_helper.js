@@ -21,7 +21,16 @@ module.exports = NodeHelper.create({
     url_base: new URL("http://webservices.nextbus.com/service/publicXMLFeed"),
 
     request_callback: async function(error, response, body) {
-        const obj = await parseXML(body);
+    
+    	let obj = undefined;
+    	
+    	try {
+	        obj = await parseXML(body);
+    	}
+    	catch(e) {
+            console.log("MMM-SFMuniBusTimes: parseXML exceptioned."); // Print out error
+    	}
+    	
         if (obj == undefined) {
             console.log("MMM-SFMuniBusTimes: parseXML returned null!"); // Print out error
             return;
