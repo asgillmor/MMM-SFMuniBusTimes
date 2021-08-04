@@ -18,7 +18,7 @@ module.exports = NodeHelper.create({
         console.log(this.name + " has started!");
     },
 
-    url_base: new URL("http://webservices.nextbus.com/service/publicXMLFeed"),
+    url_base: new URL("http://retro.umoiq.com/service/publicXMLFeed"),
 
     request_callback: async function(error, response, body) {
     
