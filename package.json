@@ -26,6 +26,7 @@
   "homepage": "https://github.com/vikramraja1995/MMM-SFMuniBusTimes#readme",
   "dependencies": {
     "node-fetch": "^2.6.1",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "request": "~2.88.2"
   }
 }
