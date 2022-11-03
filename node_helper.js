@@ -117,18 +117,9 @@ module.exports = NodeHelper.create({
 
             // Sort routes so they're always ascending alphabetically/numerically
             stopData.routes.sort((a, b) => {
-                let aSum = 0,
-                    bSum = 0;
-
-                // Get the sum of ASCII codes for the first 3 chars of each route names for better accuracy in comparison
-                for (let i = 0; i < Math.min(a.routeTag.length, 3); i += 1) {
-                    aSum += a.routeTag.charCodeAt(i);
-                }
-                for (let i = 0; i < Math.min(b.routeTag.length, 3); i += 1) {
-                    bSum += b.routeTag.charCodeAt(i);
-                }
-
-                return aSum - bSum;
+                if (a.stopTitle < b.stopTitle) { return -1; }
+                if (a.stopTitle > b.stopTitle) { return 1; }
+                return 0;
             });
 
             stopData.directionTitle = directionTitle;
@@ -142,18 +133,15 @@ module.exports = NodeHelper.create({
 
         // Sort stops in schedule so they're always ascending alphabetically
         schedule.sort((a, b) => {
-            let aSum = 0,
-                bSum = 0;
+            if (a.directionTitle < b.directionTitle) { return -1; }
+            if (a.directionTitle > b.directionTitle) { return 1; }
+            return 0;
+        });
 
-            // Get the sum of ASCII codes for the first 4 chars of stop names for better accuracy in comparison
-            for (let i = 0; i < Math.min(a.stopTitle.length, 4); i += 1) {
-                aSum += a.stopTitle.charCodeAt(i);
-            }
-            for (let i = 0; i < Math.min(b.stopTitle.length, 4); i += 1) {
-                bSum += b.stopTitle.charCodeAt(i);
-            }
-
-            return aSum - bSum;
+        schedule.sort((a, b) => {
+            if (a.stopTitle < b.stopTitle && a.directionTitle == b.directionTitle) { return -1; }
+            if (a.stopTitle > b.stopTitle && a.directionTitle == b.directionTitle) { return 1; }
+            return 0;
         });
 
         // Send the schedule to MMM-SFMuniBusTimes
